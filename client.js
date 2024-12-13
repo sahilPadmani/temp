@@ -2,11 +2,11 @@ const axios = require('axios');
 const os = require('os');
 const http = require('http');
 
-// Get the dynamic IP address and port (for this example, using localhost and port 3000)
+// Get the dynamic IP address and port
 const dynamicIP = getLocalIP();
-const port = 3000;
+const port = 7070;
 
-// Central register server URL (Replace with your actual URL)
+// Central register server URL
 const registerServerUrl = 'https://temp-m3cb.onrender.com/update-ip';
 
 // Function to get local IP address (excluding the loopback address)
@@ -22,13 +22,15 @@ function getLocalIP() {
   return null; // Fallback if no external IP is found
 }
 
+// Create the main HTTP server
 http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello, this is the target server!');
-  }).listen(port, dynamicIP, () => {
-    console.log(`Server is running on http://${dynamicIP}:${port}`);
-  });
-  
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('Hello, this is the target server!');
+}).listen(port, dynamicIP, () => {
+  console.log(`Server is running on http://${dynamicIP}:${port}`);
+  // Send the IP and port to the register server immediately after starting
+  sendDynamicIP();
+});
 
 // Function to send the dynamic IP and port to the register server
 async function sendDynamicIP() {
@@ -43,18 +45,5 @@ async function sendDynamicIP() {
   }
 }
 
-// Function to simulate the server running and periodically sending updates
-function startServer() {
-  // Create a simple HTTP server (optional, just for testing)
-  http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Server is running');
-  }).listen(port, dynamicIP, () => {
-    console.log(`Server is running on http://${dynamicIP}:${port}`);
-  });
-
-  // Send the dynamic IP and port to the register server every 30 seconds
-  setInterval(sendDynamicIP, 30000); // Update every 30 seconds
-}
-
-startServer();
+// Periodically send the dynamic IP and port to the register server
+setInterval(sendDynamicIP, 3000); // Update every 30 seconds

@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 
 // To store the IP addresses (could be a database in a real-world application)
 let serverList = {};
-
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
@@ -14,7 +13,10 @@ app.post('/update-ip', (req, res) => {
 
   if (ip && port) {
     // Save the dynamic IP and port (can store in a database)
-    serverList[ip] = port;
+    serverList['ip1'] = { 
+        port,
+        ip
+    };
     console.log(`Received update: ${ip}:${port}`);
     res.status(200).send({ message: 'IP and port updated successfully' });
   } else {
@@ -31,7 +33,7 @@ app.get('/get-server', (req, res) => {
     const { ip } = req.query; // Assume the user provides the server's name or IP in the query
   
     if (ip && serverList[ip]) {
-      res.status(200).json({ ip: ip, port: serverList[ip] });
+      res.status(200).json(serverList[ip]);
     } else {
       res.status(404).json({ message: 'Server not found' });
     }
