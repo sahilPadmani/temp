@@ -27,7 +27,18 @@ app.get('/servers', (req, res) => {
   res.json(serverList);
 });
 
+app.get('/get-server', (req, res) => {
+    const { ip } = req.query; // Assume the user provides the server's name or IP in the query
+  
+    if (ip && serverList[ip]) {
+      res.status(200).json({ ip: ip, port: serverList[ip] });
+    } else {
+      res.status(404).json({ message: 'Server not found' });
+    }
+  });
+
 // Start the register server on port 4000 (or another port)
 app.listen(4000, () => {
   console.log('Register server running on http://localhost:4000');
 });
+

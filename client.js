@@ -7,7 +7,7 @@ const dynamicIP = getLocalIP();
 const port = 3000;
 
 // Central register server URL (Replace with your actual URL)
-const registerServerUrl = 'http://localhost:4000/update-ip';
+const registerServerUrl = 'https://temp-m3cb.onrender.com/update-ip';
 
 // Function to get local IP address (excluding the loopback address)
 function getLocalIP() {
@@ -21,6 +21,14 @@ function getLocalIP() {
   }
   return null; // Fallback if no external IP is found
 }
+
+http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, this is the target server!');
+  }).listen(port, dynamicIP, () => {
+    console.log(`Server is running on http://${dynamicIP}:${port}`);
+  });
+  
 
 // Function to send the dynamic IP and port to the register server
 async function sendDynamicIP() {
